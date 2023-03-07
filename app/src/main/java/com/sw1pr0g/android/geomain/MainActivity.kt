@@ -2,7 +2,6 @@ package com.sw1pr0g.android.geomain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
 
@@ -18,11 +17,11 @@ class MainActivity : AppCompatActivity() {
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
 
-        trueButton.setOnClickListener { view: View ->
+        trueButton.setOnClickListener {
             Toast.makeText(this, R.string.correct_toast, Toast.LENGTH_SHORT).show()
         }
 
-        falseButton.setOnClickListener { view: View ->
+        falseButton.setOnClickListener {
             Toast.makeText(this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show()
         }
     }
