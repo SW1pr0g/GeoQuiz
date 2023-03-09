@@ -10,6 +10,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivityyyyyy"
+private const val KEY_INDEX = "index"
+private const val KEY_QUESTION_USER_CHECK = "userCheckList"
+private const val KEY_QUESTION_USER_BANK = "userBankList"
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,11 +31,22 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
 
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        val questionUserCheck = savedInstanceState?.getBooleanArray(KEY_QUESTION_USER_CHECK) ?:
+                            booleanArrayOf(false, false, false, false, false, false)
+        val questionUserBank = savedInstanceState?.getBooleanArray(KEY_QUESTION_USER_BANK) ?:
+        booleanArrayOf(false, false, false, false, false, false)
+        quizViewModel.currentIndex = currentIndex
+        quizViewModel.questionUserCheck = questionUserCheck.toMutableList()
+        quizViewModel.questionUserBank = questionUserBank.toMutableList()
+
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
         backButton = findViewById(R.id.back_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
+
+        checkEnabledButtons()
 
         questionTextView.setOnClickListener {
             viewNextQuestion()
@@ -78,6 +92,13 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "OnPause() called")
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "onSaveInstanceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+        savedInstanceState.putBooleanArray(KEY_QUESTION_USER_CHECK, quizViewModel.questionUserCheck.toBooleanArray())
     }
 
     override fun onStop() {

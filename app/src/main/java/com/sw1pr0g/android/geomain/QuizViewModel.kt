@@ -18,8 +18,8 @@ class QuizViewModel: ViewModel() {
         Question(R.string.question_asia, true)
     )
 
-    val questionUserCheck = mutableListOf(false, false, false, false, false, false)
-    val questionUserBank = mutableListOf(false, false, false, false, false, false)
+    var questionUserCheck = mutableListOf(false, false, false, false, false, false)
+    var questionUserBank = mutableListOf(false, false, false, false, false, false)
 
     var currentIndex = 0
 

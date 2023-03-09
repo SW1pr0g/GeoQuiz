@@ -47,7 +47,7 @@
         android:id="@+id/next_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:src="@drawable/arrow_right"
         android:contentDescription="@string/next_button_desc"/>
 
