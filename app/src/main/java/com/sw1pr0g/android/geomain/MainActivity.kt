@@ -2,10 +2,13 @@ package com.sw1pr0g.android.geomain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+
+private const val TAG = "MainActivityyyyyy"
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
 
         trueButton = findViewById(R.id.true_button)
@@ -58,6 +62,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateQuestion()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "OnStart() called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "OnResume() called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "OnPause() called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "OnPause() called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "OnPause() called")
     }
 
     private fun updateQuestion() {
