@@ -13,9 +13,14 @@
     <string name="true_button">True</string>
     <string name="false_button">False</string>
     <string name="next_button">Next</string>
+    <string name="back_button">Back</string>
 
     //toasts - text
     <string name="correct_toast">Correct!</string>
     <string name="incorrect_toast">Incorrect!</string>
+    
+    //content desc
+    <string name="back_button_desc">Go Next</string>
+    <string name="next_button_desc">Go Back</string>
 
 </resources>
