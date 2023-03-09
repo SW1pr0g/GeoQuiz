@@ -26,7 +26,12 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_americas, true),
         Question(R.string.question_asia, true)
     )
+
+    private val questionUserCheck = mutableListOf(false, false, false, false, false, false)
+    private val questionUserBank = mutableListOf(false, false, false, false, false, false)
+
     private var currentIndex = 0
+    private var currentQuestion = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,20 +50,26 @@ class MainActivity : AppCompatActivity() {
 
         trueButton.setOnClickListener {
             checkAnswer(true)
+            checkEnabledButtons()
+            correctPercentage()
         }
 
         falseButton.setOnClickListener {
             checkAnswer(false)
+            checkEnabledButtons()
+            correctPercentage()
         }
 
         backButton.setOnClickListener {
             val calcIndex = (currentIndex-1) % questionBank.size
             currentIndex = if (calcIndex > 0) calcIndex else 0
             updateQuestion()
+            checkEnabledButtons()
         }
 
         nextButton.setOnClickListener {
             viewNextQuestion()
+            checkEnabledButtons()
         }
 
         updateQuestion()
@@ -97,14 +108,39 @@ class MainActivity : AppCompatActivity() {
     private fun checkAnswer(userAnswer: Boolean) {
         val correctAnswer = questionBank[currentIndex].answer
 
-        val messageResId = if (userAnswer == correctAnswer) R.string.correct_toast
-                                                        else R.string.incorrect_toast
+        val messageResId: Int
+        if (userAnswer == correctAnswer) {
+            messageResId = R.string.correct_toast
+            questionUserBank[currentIndex] = true
+        } else {
+            messageResId = R.string.incorrect_toast
+            questionUserBank[currentIndex] = false
+        }
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+        questionUserCheck[currentIndex] = true
+    }
+
+    private fun checkEnabledButtons(){
+        if (questionUserCheck[currentIndex]) {
+            trueButton.isEnabled = false
+            falseButton.isEnabled = false
+        } else {
+            trueButton.isEnabled = true
+            falseButton.isEnabled = true
+        }
     }
 
     private fun viewNextQuestion() {
         currentIndex = (currentIndex+1) % questionBank.size
         updateQuestion()
+    }
+
+    private fun correctPercentage() {
+        if (questionUserCheck.count { it } == 6) {
+            val trueAnswers = questionUserBank.count { it }
+            Toast.makeText(this, "You have get answer to all, your percentage - ${(trueAnswers/6)*100}",
+                Toast.LENGTH_SHORT).show()
+        }
     }
 }
