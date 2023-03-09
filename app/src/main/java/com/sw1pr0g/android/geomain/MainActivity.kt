@@ -1,5 +1,7 @@
 package com.sw1pr0g.android.geomain
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +15,13 @@ private const val TAG = "MainActivityyyyyy"
 private const val KEY_INDEX = "index"
 private const val KEY_QUESTION_USER_CHECK = "userCheckList"
 private const val KEY_QUESTION_USER_BANK = "userBankList"
+private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
+    private lateinit var cheatButton: Button
     private lateinit var backButton: ImageButton
     private lateinit var nextButton: ImageButton
     private lateinit var questionTextView: TextView
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
+        cheatButton = findViewById(R.id.cheat_button)
         backButton = findViewById(R.id.back_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
@@ -64,6 +69,13 @@ class MainActivity : AppCompatActivity() {
             correctPercentage()
         }
 
+        cheatButton.setOnClickListener {
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            startActivity(intent)
+        }
+
         backButton.setOnClickListener {
             quizViewModel.moveToBack()
             updateQuestion()
@@ -77,6 +89,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateQuestion()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+
+        if (requestCode == REQUEST_CODE_CHEAT) {
+            quizViewModel.isCheater = data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
+        }
     }
 
     override fun onStart() {
@@ -120,12 +144,19 @@ class MainActivity : AppCompatActivity() {
         val correctAnswer = quizViewModel.currentQuestionAnswer
 
         val messageResId: Int
-        if (userAnswer == correctAnswer) {
-            messageResId = R.string.correct_toast
-            quizViewModel.questionUserBank[quizViewModel.currentIndex] = true
-        } else {
-            messageResId = R.string.incorrect_toast
-            quizViewModel.questionUserBank[quizViewModel.currentIndex] = false
+        when (userAnswer) {
+            quizViewModel.isCheater -> {
+                messageResId = R.string.judgment_toast
+                quizViewModel.questionUserBank[quizViewModel.currentIndex] = true
+            }
+            (userAnswer == correctAnswer) -> {
+                messageResId = R.string.correct_toast
+                quizViewModel.questionUserBank[quizViewModel.currentIndex] = true
+            }
+            else -> {
+                messageResId = R.string.incorrect_toast
+                quizViewModel.questionUserBank[quizViewModel.currentIndex] = false
+            }
         }
 
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
